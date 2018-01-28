@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "circleInit(Circle2D&amp;, unsigned long, Vec2*, Vec3*, float*):main.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "colours[1]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "main:main.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "Globals::xWindowSize">
+            </PersistentString>
+            <PersistentString
+               value = "sizeof(position) / sizeof(Vec3)">
+            </PersistentString>
+            <PersistentString
+               value = "sizeof(circle.quad)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
