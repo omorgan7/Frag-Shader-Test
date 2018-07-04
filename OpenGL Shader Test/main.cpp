@@ -129,7 +129,7 @@ int main(int argc, const char * argv[]) {
         return EXIT_FAILURE;
     }
 
-    size_t numPoints = 10000;
+    size_t numPoints = 1e3;
     Vec3* colours;
     Vec2* positions;
     float* radius;
@@ -144,7 +144,7 @@ int main(int argc, const char * argv[]) {
     
     for(size_t i = 0; i < numPoints; ++i){
         colours[i] = {rand1(gen), rand1(gen), rand1(gen)};
-        radius[i] = rand1(gen);
+        radius[i] = rand1(gen) * 0.2f;
         positions[i] = {rand2(gen), rand2(gen)};
     }
 //    Vec3 colours[] = {
@@ -182,7 +182,7 @@ int main(int argc, const char * argv[]) {
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0); //quad position
     
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vec2) * numPoints, positions, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vec2) * numPoints, positions, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0); //position
     glVertexAttribDivisor(1, 1);
     
@@ -260,32 +260,53 @@ int main(int argc, const char * argv[]) {
     
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[0]);
     
-    glEnableVertexAttribArray(1);
+    
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
+    glEnableVertexAttribArray(1);
     glVertexAttribDivisor(1, 1);
     
-    glEnableVertexAttribArray(2);
+    
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[2]);
+    glEnableVertexAttribArray(2);
     glVertexAttribDivisor(2, 1);
     
-    glEnableVertexAttribArray(3);
+    
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[3]);
+    glEnableVertexAttribArray(3);
     glVertexAttribDivisor(3, 1);
+    
+//    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     size_t fpsCounter = 0;
     double fps = 0.0f;
+    float deltaTime = 0.016f;
+    float speed = 0.1f;
     do{
         ++fpsCounter;
         double startTime = glfwGetTime();
         
         glUniform2f(resolutionID, Globals::xWindowSize, Globals::yWindowSize);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer[1]);
+        speed += -0.0981f * deltaTime * 0.5f;
+        for(size_t i = 0; i < numPoints; ++i){
+            positions[i].y += speed * deltaTime;
+            positions[i].y = positions[i].y < -0.5f ? -0.5f : positions[i].y;
+        }
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vec2) * numPoints, positions);
+
+        
+        
         glDrawArraysInstanced(GL_TRIANGLES, 0, 6, (GLint) numPoints);
         glfwSwapBuffers(window);
         glfwPollEvents();
         
         double endTime = glfwGetTime();
         fps += (endTime - startTime);
+        deltaTime = (float)(endTime - startTime);
         
     } while(!glfwWindowShouldClose(window));
     std::cout<<"FPS: "<<(double)fpsCounter / fps<<"\n";

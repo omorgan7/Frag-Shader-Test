@@ -16,8 +16,10 @@ out float aspectRatio;
 void main(){
     aspectRatio = resolution.x / resolution.y;
     vec2 shiftedPosition = quadPosition * radius + position;
-//    gl_Position = vec4(quadPosition, 0, 1);
-    gl_Position = vec4(shiftedPosition.x, shiftedPosition.y * aspectRatio, 0.0f, 1.0f);
+    float glInst = float(gl_InstanceID);
+    float zPos = -glInst / (glInst + 1);
+//    float zPos = 0.0f;
+    gl_Position = vec4(shiftedPosition.x, shiftedPosition.y * aspectRatio, zPos, 1.0f);
     fragColour = colour;
     outPosition = vec2(position.x, position.y);
     outRadius = radius;
